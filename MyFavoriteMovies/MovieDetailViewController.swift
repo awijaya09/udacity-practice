@@ -176,15 +176,13 @@ class MovieDetailViewController: UIViewController {
         let sessionID = appDelegate.sessionID
         
         let parameters : [String: String!] = [Constants.TMDBParameterKeys.ApiKey: Constants.TMDBParameterValues.ApiKey, Constants.TMDBParameterKeys.SessionID: sessionID!]
-        let url = NSURL(string: "http://api.themoviedb.org/3/account/\(appDelegate.userID)/favorite")
-        let request = NSMutableURLRequest(URL: url!)
+        let request = NSMutableURLRequest(URL: appDelegate.tmdbURLFromParameters(parameters, withPathExtension: "/account/\(appDelegate.userID!)/favorite/movies"))
         
         request.HTTPMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Accept")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.HTTPBody = "{\"media_type\":\"movie\", \"media_id\": \(movie!.id),\"favorite\": \(shouldFavorite)}".dataUsingEncoding(NSUTF8StringEncoding)
 
-        
         let task = appDelegate.sharedSession.dataTaskWithRequest(request) { (data, response, error) -> Void in
             func displayError(error: String){
                 print(error)
@@ -192,6 +190,11 @@ class MovieDetailViewController: UIViewController {
             }
             guard (error == nil) else{
                 displayError("\(error)")
+                return
+            }
+            
+            guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode where statusCode >= 200 && statusCode <= 299 else{
+                displayError("Something goes wrong here with errro: \(error)")
                 return
             }
             
