@@ -175,7 +175,7 @@ class MovieDetailViewController: UIViewController {
         let shouldFavorite = !isFavorite
         let sessionID = appDelegate.sessionID
         
-        let parameters : [String: String!] = [Constants.TMDBParameterKeys.ApiKey: "730efa9703b85c9a3ab3dc96eff7bd90" , Constants.TMDBParameterKeys.SessionID: sessionID!]
+        let parameters : [String: String!] = [Constants.TMDBParameterKeys.ApiKey: Constants.TMDBParameterValues.ApiKey, Constants.TMDBParameterKeys.SessionID: sessionID!]
         let url = NSURL(string: "http://api.themoviedb.org/3/account/\(appDelegate.userID)/favorite")
         let request = NSMutableURLRequest(URL: url!)
         
